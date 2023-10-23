@@ -14,6 +14,8 @@ public class Server {
 
     private World world;
     private ServerSocket socket;
+    private Map<Integer, ClientHandler> connectingClients;
+    private int nextClientId = 1;
 
     public Map<Integer, ClientHandler> getConnectingClients() {
         return connectingClients;
@@ -30,9 +32,6 @@ public class Server {
     public ServerSocket getSocket() {
         return socket;
     }
-
-    private Map<Integer, ClientHandler> connectingClients;
-    private int nextClientId = 1;
 
     public Server(int port) {
         try {
