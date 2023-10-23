@@ -17,6 +17,22 @@ public class Server {
     private Map<Integer, ClientHandler> connectingClients;
     private int nextClientId = 1;
 
+    public Map<Integer, ClientHandler> getConnectingClients() {
+        return connectingClients;
+    }
+
+    public int getNextClientId() {
+        return nextClientId;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public ServerSocket getSocket() {
+        return socket;
+    }
+
     public Server(int port) {
         try {
             world = new World();
