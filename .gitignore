@@ -23,6 +23,9 @@
 hs_err_pid*
 replay_pid*
 
+.idea
+*.iml
+
 # Default ignored files
 /shelf/
 /workspace.xml
