@@ -22,6 +22,7 @@ public class ServerTests {
 
     @AfterEach
     void tearDown() {
+        this.server.shutdown();
         this.server = null;
     }
 
@@ -48,4 +49,25 @@ public class ServerTests {
         Assertions.assertEquals(0, server.getConnectingClients().size());
     }
 
+    @Test
+    public void testSpawnMultipleBalls() {
+        final int n = 10;
+        HeadlessClient client = new HeadlessClient(HOST, PORT);
+        int initialCircleCount = server.getWorld().getCircles().size();
+
+        // Spawn n balls using the client
+        for (int i = 0; i < n; i++) {
+            client.sendSpawnCommand(10 + i, 10 + i); // Adjust coordinates as needed
+            try {
+                Thread.sleep(500); // Short delay to ensure messages are processed in order. Adjust if needed.
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // After all spawn commands, check the count of circles in the server's world
+        int finalCircleCount = server.getWorld().getCircles().size();
+        Assertions.assertEquals(initialCircleCount + n, finalCircleCount, "The server should have " + n + " more circles after spawning.");
+        client.stop();
+    }
 }
