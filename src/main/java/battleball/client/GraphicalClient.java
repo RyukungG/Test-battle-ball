@@ -150,7 +150,7 @@ public class GraphicalClient extends Client {
     }
 
     public static void main(String[] args) {
-        new GraphicalClient("localhost", 12340);
+        new GraphicalClient("localhost", 12345);
     }
 
 }
