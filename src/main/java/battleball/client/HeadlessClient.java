@@ -1,4 +1,4 @@
-package assignment1.client;
+package battleball.client;
 
 public class HeadlessClient extends Client {
 

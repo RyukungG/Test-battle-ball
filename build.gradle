@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation('org.junit.jupiter:junit-jupiter:5.10.0')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task runServer(type: JavaExec) {
+    group = "exec"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "battleball.server.Server"
+}
+
+task runClient(type: JavaExec) {
+    group = "exec"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "battleball.client.GraphicalClient"
+}

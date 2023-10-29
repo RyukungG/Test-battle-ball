@@ -1,4 +1,4 @@
-package assignment1.server;
+package battleball.server;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -45,7 +45,7 @@ public class Server {
                     broadcastCirclesPositions();
                 }
             }, 100L, 20L);
-            listen();
+            new Thread(this::listen).start();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -255,6 +255,15 @@ public class Server {
             updateWorldCorners();
         }
 
+    }
+
+    public void shutdown() {
+        connectingClients.clear();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

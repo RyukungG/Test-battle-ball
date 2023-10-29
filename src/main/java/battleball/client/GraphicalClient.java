@@ -1,6 +1,6 @@
-package assignment1.client;
+package battleball.client;
 
-import assignment1.server.Circle;
+import battleball.server.Circle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,13 +8,10 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TimerTask;
 
 public class GraphicalClient extends Client {
 

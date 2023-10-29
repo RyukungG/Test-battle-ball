@@ -1,4 +1,4 @@
-package assignment1.server;
+package battleball.server;
 
 import java.awt.*;
 import java.util.ArrayList;

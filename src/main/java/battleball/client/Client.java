@@ -1,23 +1,27 @@
-package assignment1.client;
+package battleball.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 public abstract class Client {
 
+    private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
+    private Thread thread;
 
     public Client(String host, int port) {
         try {
-            Socket socket = new Socket(host, port);
+            socket = new Socket(host, port);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(), true);
             System.out.println("Connected to server: " + socket);
-            new SocketReadingThread().start();
+            thread = new SocketReadingThread();
+            thread.start();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -31,8 +35,8 @@ public abstract class Client {
                 while ((message = reader.readLine()) != null) {
                     handleInboundMessage(message);
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException ignored) {
+
             }
         }
     }
@@ -41,6 +45,15 @@ public abstract class Client {
 
     public void sendMessage(String message) {
         writer.println(message);
+    }
+
+    public void stop() {
+        thread.interrupt();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
