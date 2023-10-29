@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.*;
 import java.util.List;
 
@@ -59,6 +60,8 @@ public class Server {
                 ClientHandler handler = new ClientHandler(clientSocket);
                 connectingClients.put(handler.getId(), handler);
                 new Thread(handler).start();
+            } catch (SocketException ignored) {
+
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

@@ -2,12 +2,12 @@ package battleball;
 
 import battleball.client.HeadlessClient;
 import battleball.server.Server;
+import battleball.server.World;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 
 public class ServerTests {
 
@@ -64,12 +64,6 @@ public class ServerTests {
 
         client.sendRelocateCommand(0, 0, 100, 100);
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         client2.sendRelocateCommand(100, 100, 200, 200);
 
         try {
@@ -80,5 +74,59 @@ public class ServerTests {
 
         Assertions.assertEquals(new Point(0, 0), server.getWorld().getMinCorner());
         Assertions.assertEquals(new Point(200, 200), server.getWorld().getMaxCorner());
+    }
+      
+    @Test
+    public void testKillBall()
+    {
+        HeadlessClient client = new HeadlessClient(HOST, PORT);
+        client.sendRelocateCommand(0,0,500,500);
+
+        client.sendSpawnCommand(250,250);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        Assertions.assertEquals(1, server.getWorld().getCircles().size());
+      
+        client.sendKillCommand();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(0, server.getWorld().getCircles().size());
+
+        client.stop();
+    }
+
+    public void testRemoveNBall() {
+        final int spawn = 10;
+        final int remove = 5;
+
+        HeadlessClient client = new HeadlessClient(HOST, PORT);
+
+        for (int i = 0; i<spawn; i++) {
+            client.sendSpawnCommand(10 * i, 10 * i);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Assertions.assertEquals(spawn, server.getWorld().getCircles().size());
+
+        for (int i = 0; i<remove; i++) {
+            client.sendKillCommand();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Assertions.assertEquals(5, server.getWorld().getCircles().size());
     }
 }

@@ -25,8 +25,10 @@ public class Circle {
         this.y = y;
         this.diameter = d;
         this.color = c;
-        this.velocityX = new Random().nextInt(5, 25);
-        this.velocityY = new Random().nextInt(5, 25);
+        int min = 5;
+        int max = 25;
+        this.velocityX = new Random().nextInt((max-min)+1) + min;
+        this.velocityY = new Random().nextInt((max-min)+1) + min;
     }
 
     public Circle(int x, int y, int d)
