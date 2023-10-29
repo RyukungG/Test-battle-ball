@@ -61,9 +61,8 @@ public class Server {
                 connectingClients.put(handler.getId(), handler);
                 new Thread(handler).start();
             } catch (SocketException ignored) {
-
             } catch (IOException ex) {
-                ex.printStackTrace();
+                ex.printStackTrace();;
             }
         }
     }
