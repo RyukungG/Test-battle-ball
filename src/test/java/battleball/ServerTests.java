@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+
 public class ServerTests {
 
     Server server;
@@ -22,6 +24,7 @@ public class ServerTests {
 
     @AfterEach
     void tearDown() {
+        this.server.shutdown();
         this.server = null;
     }
 
@@ -48,4 +51,34 @@ public class ServerTests {
         Assertions.assertEquals(0, server.getConnectingClients().size());
     }
 
+    @Test
+    public void testRelocateNWindow() {
+        HeadlessClient client = new HeadlessClient(HOST, PORT);
+        HeadlessClient client2 = new HeadlessClient(HOST, PORT);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        client.sendRelocateCommand(0, 0, 100, 100);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        client2.sendRelocateCommand(100, 100, 200, 200);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(new Point(0, 0), server.getWorld().getMinCorner());
+        Assertions.assertEquals(new Point(200, 200), server.getWorld().getMaxCorner());
+    }
 }
