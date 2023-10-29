@@ -2,6 +2,7 @@ package battleball;
 
 import battleball.client.HeadlessClient;
 import battleball.server.Server;
+import battleball.server.World;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +50,6 @@ public class ServerTests {
         Assertions.assertEquals(0, server.getConnectingClients().size());
     }
 
-    @Test
     public void testKillBall()
     {
         HeadlessClient client = new HeadlessClient(HOST, PORT);
@@ -76,7 +76,33 @@ public class ServerTests {
         Assertions.assertEquals(0, server.getWorld().getCircles().size());
 
         client.stop();
+    }
 
+    public void testRemoveNBall() {
+        final int spawn = 10;
+        final int remove = 5;
+
+        HeadlessClient client = new HeadlessClient(HOST, PORT);
+
+        for (int i = 0; i<spawn; i++) {
+            client.sendSpawnCommand(10 * i, 10 * i);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Assertions.assertEquals(spawn, server.getWorld().getCircles().size());
+
+        for (int i = 0; i<remove; i++) {
+            client.sendKillCommand();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Assertions.assertEquals(5, server.getWorld().getCircles().size());
     }
 
 }
