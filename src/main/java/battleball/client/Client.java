@@ -35,8 +35,10 @@ public abstract class Client {
                 while ((message = reader.readLine()) != null) {
                     handleInboundMessage(message);
                 }
-            } catch (IOException ignored) {
+            } catch (SocketException ignored) {
 
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }
