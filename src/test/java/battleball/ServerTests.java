@@ -22,6 +22,7 @@ public class ServerTests {
 
     @AfterEach
     void tearDown() {
+        this.server.shutdown();
         this.server = null;
     }
 
@@ -46,6 +47,36 @@ public class ServerTests {
         }
 
         Assertions.assertEquals(0, server.getConnectingClients().size());
+    }
+
+    @Test
+    public void testKillBall()
+    {
+        HeadlessClient client = new HeadlessClient(HOST, PORT);
+        client.sendRelocateCommand(0,0,500,500);
+
+        client.sendSpawnCommand(250,250);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(1, server.getWorld().getCircles().size());
+
+        client.sendKillCommand();
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(0, server.getWorld().getCircles().size());
+
+        client.stop();
+
     }
 
 }
