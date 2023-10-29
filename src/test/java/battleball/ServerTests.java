@@ -2,12 +2,12 @@ package battleball;
 
 import battleball.client.HeadlessClient;
 import battleball.server.Server;
-import battleball.server.World;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.awt.Point;
 
 public class ServerTests {
 
@@ -50,6 +50,7 @@ public class ServerTests {
 
         Assertions.assertEquals(0, server.getConnectingClients().size());
     }
+
     @Test
     public void testRelocateOneWindow() {
         HeadlessClient client = new HeadlessClient(HOST, PORT);
@@ -93,9 +94,33 @@ public class ServerTests {
         Assertions.assertEquals(new Point(0, 0), server.getWorld().getMinCorner());
         Assertions.assertEquals(new Point(200, 200), server.getWorld().getMaxCorner());
     }
-      
+
+    // TODO: Test case for one ball. (Demo)
+
     @Test
-    public void testKillBall()
+    public void testSpawnNBall() {
+        final int n = 10;
+        HeadlessClient client = new HeadlessClient(HOST, PORT);
+        int initialCircleCount = server.getWorld().getCircles().size();
+
+        // Spawn n balls using the client
+        for (int i = 0; i < n; i++) {
+            client.sendSpawnCommand(10 + i, 10 + i); // Adjust coordinates as needed
+            try {
+                Thread.sleep(500); // Short delay to ensure messages are processed in order. Adjust if needed.
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // After all spawn commands, check the count of circles in the server's world
+        int finalCircleCount = server.getWorld().getCircles().size();
+        Assertions.assertEquals(initialCircleCount + n, finalCircleCount, "The server should have " + n + " more circles after spawning.");
+        client.stop();
+    }
+
+    @Test
+    public void testRemoveOneBall()
     {
         HeadlessClient client = new HeadlessClient(HOST, PORT);
         client.sendRelocateCommand(0,0,500,500);
@@ -108,7 +133,7 @@ public class ServerTests {
             throw new RuntimeException(e);
         }
         Assertions.assertEquals(1, server.getWorld().getCircles().size());
-      
+
         client.sendKillCommand();
         try {
             Thread.sleep(100);
@@ -148,26 +173,5 @@ public class ServerTests {
             }
         }
         Assertions.assertEquals(5, server.getWorld().getCircles().size());
-    }
-  
-    public void testSpawnMultipleBalls() {
-        final int n = 10;
-        HeadlessClient client = new HeadlessClient(HOST, PORT);
-        int initialCircleCount = server.getWorld().getCircles().size();
-
-        // Spawn n balls using the client
-        for (int i = 0; i < n; i++) {
-            client.sendSpawnCommand(10 + i, 10 + i); // Adjust coordinates as needed
-            try {
-                Thread.sleep(500); // Short delay to ensure messages are processed in order. Adjust if needed.
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        // After all spawn commands, check the count of circles in the server's world
-        int finalCircleCount = server.getWorld().getCircles().size();
-        Assertions.assertEquals(initialCircleCount + n, finalCircleCount, "The server should have " + n + " more circles after spawning.");
-        client.stop();
     }
 }
