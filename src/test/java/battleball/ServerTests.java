@@ -50,6 +50,24 @@ public class ServerTests {
 
         Assertions.assertEquals(0, server.getConnectingClients().size());
     }
+    @Test
+    public void testRelocateOneWindow() {
+        HeadlessClient client = new HeadlessClient(HOST, PORT);
+        client.sendRelocateCommand(0,0,100,100);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        {
+            Assertions.assertEquals(0,server.getWorld().getMinCorner().x);
+            Assertions.assertEquals(0,server.getWorld().getMinCorner().y);
+            Assertions.assertEquals(100,server.getWorld().getMaxCorner().x);
+            Assertions.assertEquals(100,server.getWorld().getMaxCorner().y);
+        }
+
+    }
 
     @Test
     public void testRelocateNWindow() {
