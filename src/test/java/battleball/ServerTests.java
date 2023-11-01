@@ -107,7 +107,7 @@ public class ServerTests {
         for (int i = 0; i < n; i++) {
             client.sendSpawnCommand(10 + i, 10 + i); // Adjust coordinates as needed
             try {
-                Thread.sleep(500); // Short delay to ensure messages are processed in order. Adjust if needed.
+                Thread.sleep(100); // Short delay to ensure messages are processed in order. Adjust if needed.
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

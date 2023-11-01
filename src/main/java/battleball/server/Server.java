@@ -73,7 +73,9 @@ public class Server {
             // Don't waste processing
             return;
         }
-        world.getCircles().forEach(c -> {
+        @SuppressWarnings("unchecked")
+        ArrayList<Circle> circles = (ArrayList<Circle>) world.getCircles().clone();
+        circles.forEach(c -> {
             int id = c.getId();
             int x = c.getX(), y = c.getY();
             int d = c.getDiameter();
